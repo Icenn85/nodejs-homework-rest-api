@@ -6,8 +6,8 @@ async function signup(req, res, next) {
     try {
         const { email, password } = req.body;
         const salt = await bcrypt.genSalt();
-        const hashedPass = await bcrypt.hash(password, salt);
-        const savedUser = await User.create({ email, password: hashedPass });
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const savedUser = await User.create({ email, password: hashedPassword });
     return res.status(201).json({
       user: {
         email,
@@ -16,7 +16,7 @@ async function signup(req, res, next) {
     });
   } catch (error) {
       if (error.message.includes("E11000 duplicate key error")) {
-        return next(HttpError(409, "User with this email already exists"));
+        return next(HttpError(409, "Email in use"));
       }
     next(error);
   }
