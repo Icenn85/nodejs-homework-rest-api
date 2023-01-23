@@ -7,7 +7,13 @@ async function createContact(req, res, next) {
     if (!name || !email || !phone) {
       return next(HttpError(400, "missing required name field"));
     }
-    const newContact = await Contact.create({ name, email, phone });
+    const { _id } = req.user;
+    const newContact = await Contact.create({
+      name,
+      email,
+      phone,
+      owner: _id,
+    });
     res.status(201).json(newContact);
   } catch (error) {
     next(error);

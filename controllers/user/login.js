@@ -1,6 +1,9 @@
 const { User } = require("../../models/user");
 const { HttpError } = require("../../helpers/index");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const { JWT_SECRET } = process.env;
 
 async function login(req, res, next) {
     try {
@@ -19,18 +22,19 @@ async function login(req, res, next) {
         if (!isPasswordValid) {
             return next(HttpError(401, "Email or password is wrong"));
         }
-    return res.status(201).json({
-      user: {
-        email,
-        subscription: savedUser.subscription,
-      },
-    });
-  } catch (error) {
-    if (error.message.includes("E11000 duplicate key error")) {
-      return next(HttpError(409, "User with this email already exists"));
-    }
+
+        const payload = { id: storedUser._id };
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+        return res.status(201).json({
+            token,
+            user: {
+                email,
+                subscription: storedUser.subscription,
+            },
+        });
+    } catch (error) {
     next(error);
-  }
+    }
 }
 
 module.exports = {
