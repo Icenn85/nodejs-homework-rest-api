@@ -6,8 +6,8 @@ const {
   deleteContact,
   contactToUpdate,
   contactStatusToUpdate,
-} = require("../../controllers/contactsController");
-const { validateBody } = require("../../middlewares/index");
+} = require("../../controllers");
+const { validateBody, auth } = require("../../middlewares/index");
 const {
   addContactSchema,
   updatedStatusContactSchema,
@@ -15,18 +15,19 @@ const {
 
 const router = express.Router()
 
-router.get('/', getContacts)
+router.get('/', auth, getContacts)
 
-router.get("/:contactId", getContact);
+router.get("/:contactId", auth, getContact);
 
-router.post("/", validateBody(addContactSchema), createContact);
+router.post("/", auth, validateBody(addContactSchema), createContact);
 
-router.delete("/:contactId", deleteContact);
+router.delete("/:contactId", auth, deleteContact);
 
 router.put("/:contactId", validateBody(addContactSchema), contactToUpdate);
 
 router.patch(
   "/:contactId/favorite",
+  auth,
   validateBody(updatedStatusContactSchema),
   contactStatusToUpdate
 );
