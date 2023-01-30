@@ -9,12 +9,15 @@ async function signup(req, res, next) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
         const avatarURL = gravatar.url(email);
-        const savedUser = await User.create({ email, password: hashedPassword });
+        const savedUser = await User.create({
+          email,
+          password: hashedPassword,
+          avatarURL,
+        });
     return res.status(201).json({
       user: {
         email,
         subscription: savedUser.subscription,
-        avatarURL,
       },
     });
   } catch (error) {
