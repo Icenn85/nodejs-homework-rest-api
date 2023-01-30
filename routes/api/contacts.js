@@ -7,7 +7,7 @@ const {
   contactToUpdate,
   contactStatusToUpdate,
 } = require("../../controllers");
-const { validateBody, auth } = require("../../middlewares/index");
+const { validateBody, auth } = require("../../middlewares");
 const {
   addContactSchema,
   updatedStatusContactSchema,
