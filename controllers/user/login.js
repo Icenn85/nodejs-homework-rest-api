@@ -1,40 +1,44 @@
 const { User } = require("../../models/user");
-const { HttpError } = require("../../helpers/index");
+const { HttpError } = require("../../helpers");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const { JWT_SECRET } = process.env;
 
 async function login(req, res, next) {
-    try {
-        const { email, password } = req.body;
-      
-        const storedUser = await User.findOne({
-            email,
-        });
-    
-        if (!storedUser) {
-            return next(HttpError(401, "Email or password is wrong"));
-        }
-    
-        const isPasswordValid = await bcrypt.compare(password, storedUser.password);
+  try {
+    const { email, password } = req.body;
 
-        if (!isPasswordValid) {
-            return next(HttpError(401, "Email or password is wrong"));
-        }
+    const storedUser = await User.findOne({
+      email,
+    });
 
-        const payload = { id: storedUser._id };
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
-        return res.status(201).json({
-            token,
-            user: {
-                email,
-                subscription: storedUser.subscription,
-            },
-        });
-    } catch (error) {
-    next(error);
+    if (!storedUser) {
+      return next(HttpError(401, "Email or password is wrong"));
     }
+
+    const isPasswordValid = await bcrypt.compare(password, storedUser.password);
+
+    if (!isPasswordValid) {
+      return next(HttpError(401, "Email or password is wrong"));
+    }
+
+    if (!storedUser.verify) {
+      return next(HttpError(400, "Email not verify"));
+    }
+
+    const payload = { id: storedUser._id };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+    return res.status(201).json({
+      token,
+      user: {
+        email,
+        subscription: storedUser.subscription,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {

@@ -1,9 +1,7 @@
-function HttpError(status, message) {
-  const err = new Error(message);
-  err.status = status;
-  return err;
-}
+const HttpError = require("./HttpError");
+const sendMail = require("./sendMail");
 
 module.exports = {
   HttpError,
+  sendMail,
 };
