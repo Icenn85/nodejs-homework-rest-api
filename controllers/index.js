@@ -8,23 +8,27 @@ const {
 } = require("./contacts");
 
 const {
-    signup,
-    login,
-    logout,
-    current,
-    updateAvatar,
+  signup,
+  login,
+  logout,
+  current,
+  updateAvatar,
+  verifyEmail,
+  reVerifyEmail,
 } = require("./user");
 
 module.exports = {
-    getContacts,
-    getContact,
-    createContact,
-    deleteContact,
-    contactToUpdate,
-    contactStatusToUpdate,
-    signup,
-    login,
-    logout,
-    current,
-    updateAvatar,
+  getContacts,
+  getContact,
+  createContact,
+  deleteContact,
+  contactToUpdate,
+  contactStatusToUpdate,
+  signup,
+  login,
+  logout,
+  current,
+  updateAvatar,
+  verifyEmail,
+  reVerifyEmail,
 };
